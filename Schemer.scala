@@ -104,15 +104,12 @@ class Schemer(file: String = "") {
 		case _ => "ERROR"
 	}
 
-	def table(name: String) = Seq(
-		"ADD JAR hive-json-serde-0.2.jar;",
-		"",
-		s"CREATE TABLE $name (",
+	def table(name: String, location: String) = Seq(
+		s"CREATE EXTERNAL TABLE $name (",
 			definition(1).replace('.', '_'),
 		") ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.JsonSerde';",
-		"",
-		s"LOAD DATA LOCAL INPATH '$file' INTO TABLE $name;"
+		s"location '$location';"
 	).mkString("\n")
 
-	override def toString = table("data")
+	override def toString = table("data", "/")
 }
